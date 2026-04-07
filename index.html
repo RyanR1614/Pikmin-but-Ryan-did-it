@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pikmin AI Sandbox</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header id="header">
+      <div id="logo">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">PIKMIN<span class="logo-accent"> but Ryan</span> did it</span>
+      </div>
+      <div id="header-controls">
+        <button id="btn-preset" class="btn btn-secondary">📋 Presets</button>
+        <button id="btn-share" class="btn btn-secondary">🔗 Share</button>
+        <button id="btn-help" class="btn btn-secondary">❓ Help</button>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div id="main-layout">
+
+      <!-- Left Panel: Behavior Editor -->
+      <aside id="panel-left">
+        <div class="panel-section">
+          <h2 class="panel-title">🧠 Behavior Rules</h2>
+
+          <div class="rule-group">
+            <label class="rule-label">Global Priority</label>
+            <div class="priority-list" id="priority-list">
+              <div class="priority-item" draggable="true" data-priority="attack">⚔️ Attack Enemies</div>
+              <div class="priority-item" draggable="true" data-priority="carry">💎 Carry Treasure</div>
+              <div class="priority-item" draggable="true" data-priority="follow">👣 Follow Leader</div>
+              <div class="priority-item" draggable="true" data-priority="retreat">🏃 Retreat if Alone</div>
+            </div>
+            <small class="hint">Drag to reorder priorities</small>
+          </div>
+
+          <div class="rule-group">
+            <label class="rule-label">Aggression <span class="rule-val" id="val-aggression">50</span>%</label>
+            <input type="range" min="0" max="100" value="50" class="slider" id="sl-aggression" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Fear Threshold <span class="rule-val" id="val-fear">30</span>%</label>
+            <input type="range" min="0" max="100" value="30" class="slider" id="sl-fear" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Teamwork <span class="rule-val" id="val-teamwork">60</span>%</label>
+            <input type="range" min="0" max="100" value="60" class="slider" id="sl-teamwork" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Detection Range <span class="rule-val" id="val-detection">80</span>px</label>
+            <input type="range" min="20" max="200" value="80" class="slider" id="sl-detection" />
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h2 class="panel-title">🔴 Red Pikmin</h2>
+          <div class="rule-group">
+            <label class="rule-label">Count <span class="rule-val" id="val-red-count">10</span></label>
+            <input type="range" min="0" max="30" value="10" class="slider" id="sl-red-count" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Aggression Boost <span class="rule-val" id="val-red-agg">+20</span>%</label>
+            <input type="range" min="-50" max="50" value="20" class="slider" id="sl-red-agg" />
+          </div>
+          <div class="type-tags">
+            <span class="tag tag-red">High ATK</span>
+            <span class="tag tag-red">Fire Immune</span>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h2 class="panel-title">🔵 Blue Pikmin</h2>
+          <div class="rule-group">
+            <label class="rule-label">Count <span class="rule-val" id="val-blue-count">10</span></label>
+            <input type="range" min="0" max="30" value="10" class="slider" id="sl-blue-count" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Speed Boost <span class="rule-val" id="val-blue-spd">+15</span>%</label>
+            <input type="range" min="-50" max="50" value="15" class="slider" id="sl-blue-spd" />
+          </div>
+          <div class="type-tags">
+            <span class="tag tag-blue">Water Immune</span>
+            <span class="tag tag-blue">Fast Carry</span>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h2 class="panel-title">🟡 Yellow Pikmin</h2>
+          <div class="rule-group">
+            <label class="rule-label">Count <span class="rule-val" id="val-yellow-count">5</span></label>
+            <input type="range" min="0" max="30" value="5" class="slider" id="sl-yellow-count" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Throw Range <span class="rule-val" id="val-yellow-rng">+30</span>%</label>
+            <input type="range" min="-50" max="50" value="30" class="slider" id="sl-yellow-rng" />
+          </div>
+          <div class="type-tags">
+            <span class="tag tag-yellow">Elec Immune</span>
+            <span class="tag tag-yellow">High Carry</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center: Canvas -->
+      <main id="canvas-wrap">
+        <div id="canvas-toolbar">
+          <div id="sim-controls">
+            <button id="btn-play" class="btn btn-primary">▶ Start</button>
+            <button id="btn-pause" class="btn btn-secondary" disabled>⏸ Pause</button>
+            <button id="btn-step" class="btn btn-secondary" disabled>⏭ Step</button>
+            <button id="btn-reset" class="btn btn-danger">↺ Reset</button>
+          </div>
+          <div id="speed-control">
+            <label>Speed:</label>
+            <input type="range" min="0.25" max="4" step="0.25" value="1" id="sl-speed" />
+            <span id="val-speed">1×</span>
+          </div>
+          <div id="sim-timer">
+            <span id="timer-display">00:00</span>
+          </div>
+        </div>
+
+        <canvas id="game-canvas"></canvas>
+
+        <div id="canvas-legend">
+          <span class="legend-item"><span class="dot red"></span> Red Pikmin</span>
+          <span class="legend-item"><span class="dot blue"></span> Blue Pikmin</span>
+          <span class="legend-item"><span class="dot yellow"></span> Yellow Pikmin</span>
+          <span class="legend-item"><span class="dot gold"></span> Treasure</span>
+          <span class="legend-item"><span class="dot enemy"></span> Enemy</span>
+          <span class="legend-item"><span class="dot base"></span> Base</span>
+        </div>
+      </main>
+
+      <!-- Right Panel: Stats + Scenarios -->
+      <aside id="panel-right">
+        <div class="panel-section">
+          <h2 class="panel-title">📊 Live Stats</h2>
+          <div id="stats-grid">
+            <div class="stat-card">
+              <div class="stat-val" id="stat-pikmin-alive">0</div>
+              <div class="stat-label">Pikmin Alive</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" id="stat-pikmin-lost">0</div>
+              <div class="stat-label">Pikmin Lost</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" id="stat-treasure">0</div>
+              <div class="stat-label">Treasure ✔</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" id="stat-enemies">0</div>
+              <div class="stat-label">Enemies Left</div>
+            </div>
+          </div>
+          <div class="stat-row">
+            <span>Efficiency Score</span>
+            <span id="stat-efficiency" class="stat-highlight">—</span>
+          </div>
+          <div class="stat-row">
+            <span>Total Treasure Value</span>
+            <span id="stat-value" class="stat-highlight">0</span>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h2 class="panel-title">📋 Scenarios</h2>
+          <div class="scenario-list">
+            <button class="scenario-btn active" data-scenario="sandbox">
+              <span class="sc-icon">🌿</span>
+              <div>
+                <div class="sc-name">Free Sandbox</div>
+                <div class="sc-desc">Empty map, full control</div>
+              </div>
+            </button>
+            <button class="scenario-btn" data-scenario="enemy-heavy">
+              <span class="sc-icon">👾</span>
+              <div>
+                <div class="sc-name">Enemy Horde</div>
+                <div class="sc-desc">Many enemies, few items</div>
+              </div>
+            </button>
+            <button class="scenario-btn" data-scenario="treasure-rush">
+              <span class="sc-icon">💎</span>
+              <div>
+                <div class="sc-name">Treasure Rush</div>
+                <div class="sc-desc">Race to collect all items</div>
+              </div>
+            </button>
+            <button class="scenario-btn" data-scenario="limited">
+              <span class="sc-icon">⚠️</span>
+              <div>
+                <div class="sc-name">Limited Squad</div>
+                <div class="sc-desc">Only 5 Pikmin, survive!</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h2 class="panel-title">📖 Event Log</h2>
+          <div id="event-log"></div>
+        </div>
+
+        <div class="panel-section" id="results-panel" style="display:none">
+          <h2 class="panel-title">🏆 Run Results</h2>
+          <div id="results-content"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal-box">
+      <button id="modal-close">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/systems/vector.js"></script>
+  <script src="js/systems/pathfinding.js"></script>
+  <script src="js/systems/eventbus.js"></script>
+  <script src="js/entities/base.js"></script>
+  <script src="js/entities/treasure.js"></script>
+  <script src="js/entities/enemy.js"></script>
+  <script src="js/entities/pikmin.js"></script>
+  <script src="js/entities/leader.js"></script>
+  <script src="js/systems/world.js"></script>
+  <script src="js/systems/renderer.js"></script>
+  <script src="js/scenarios/scenarios.js"></script>
+  <script src="js/ui/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
