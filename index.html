@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pick Men?</title>
+  <title>Pikmin-but-Ryan-did-it</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap"
@@ -13,11 +13,12 @@
 
 <body>
   <div id="app">
-    <!-- Header -->
+
+    <!-- ── Header ─────────────────────────────────────────────────────────── -->
     <header id="header">
       <div id="logo">
         <span class="logo-icon">🌿</span>
-        <span class="logo-text">PICK MEN?<span class="logo-accent">
+        <span class="logo-text">PIKMIN<span class="logo-accent">AI</span> SANDBOX</span>
       </div>
       <div id="header-controls">
         <button id="btn-preset" class="btn btn-secondary">📋 Presets</button>
@@ -26,14 +27,15 @@
       </div>
     </header>
 
-    <!-- Main Layout -->
+    <!-- ── Main Layout ────────────────────────────────────────────────────── -->
     <div id="main-layout">
 
-      <!-- Left Panel: Behavior Editor -->
+      <!-- ═══ LEFT PANEL: Pikmin Behavior + Types ═══════════════════════════ -->
       <aside id="panel-left">
+
+        <!-- Global Behavior Rules -->
         <div class="panel-section">
           <h2 class="panel-title">🧠 Behavior Rules</h2>
-
           <div class="rule-group">
             <label class="rule-label">Global Priority</label>
             <div class="priority-list" id="priority-list">
@@ -44,7 +46,6 @@
             </div>
             <small class="hint">Drag to reorder priorities</small>
           </div>
-
           <div class="rule-group">
             <label class="rule-label">Aggression <span class="rule-val" id="val-aggression">50</span>%</label>
             <input type="range" min="0" max="100" value="50" class="slider" id="sl-aggression" />
@@ -63,15 +64,16 @@
           </div>
         </div>
 
+        <!-- Red Pikmin -->
         <div class="panel-section">
-          <h2 class="panel-title">🔴 Red Pikmin</h2>
+          <h2 class="panel-title" style="color:#ff6060">🔴 Red Pikmin</h2>
           <div class="rule-group">
             <label class="rule-label">Count <span class="rule-val" id="val-red-count">10</span></label>
-            <input type="range" min="0" max="30" value="10" class="slider" id="sl-red-count" />
+            <input type="range" min="0" max="30" value="10" class="slider slider-red" id="sl-red-count" />
           </div>
           <div class="rule-group">
-            <label class="rule-label">Aggression Boost <span class="rule-val" id="val-red-agg">+20</span>%</label>
-            <input type="range" min="-50" max="50" value="20" class="slider" id="sl-red-agg" />
+            <label class="rule-label">Aggression Bonus <span class="rule-val" id="val-red-agg">+20</span>%</label>
+            <input type="range" min="-50" max="50" value="20" class="slider slider-red" id="sl-red-agg" />
           </div>
           <div class="type-tags">
             <span class="tag tag-red">High ATK</span>
@@ -79,15 +81,16 @@
           </div>
         </div>
 
+        <!-- Blue Pikmin -->
         <div class="panel-section">
-          <h2 class="panel-title">🔵 Blue Pikmin</h2>
+          <h2 class="panel-title" style="color:#6090ff">🔵 Blue Pikmin</h2>
           <div class="rule-group">
             <label class="rule-label">Count <span class="rule-val" id="val-blue-count">10</span></label>
-            <input type="range" min="0" max="30" value="10" class="slider" id="sl-blue-count" />
+            <input type="range" min="0" max="30" value="10" class="slider slider-blue" id="sl-blue-count" />
           </div>
           <div class="rule-group">
-            <label class="rule-label">Speed Boost <span class="rule-val" id="val-blue-spd">+15</span>%</label>
-            <input type="range" min="-50" max="50" value="15" class="slider" id="sl-blue-spd" />
+            <label class="rule-label">Speed Bonus <span class="rule-val" id="val-blue-spd">+15</span>%</label>
+            <input type="range" min="-50" max="50" value="15" class="slider slider-blue" id="sl-blue-spd" />
           </div>
           <div class="type-tags">
             <span class="tag tag-blue">Water Immune</span>
@@ -95,24 +98,43 @@
           </div>
         </div>
 
+        <!-- Yellow Pikmin -->
         <div class="panel-section">
-          <h2 class="panel-title">🟡 Yellow Pikmin</h2>
+          <h2 class="panel-title" style="color:#ffdd4a">🟡 Yellow Pikmin</h2>
           <div class="rule-group">
             <label class="rule-label">Count <span class="rule-val" id="val-yellow-count">5</span></label>
-            <input type="range" min="0" max="30" value="5" class="slider" id="sl-yellow-count" />
+            <input type="range" min="0" max="30" value="5" class="slider slider-yellow" id="sl-yellow-count" />
           </div>
           <div class="rule-group">
-            <label class="rule-label">Throw Range <span class="rule-val" id="val-yellow-rng">+30</span>%</label>
-            <input type="range" min="-50" max="50" value="30" class="slider" id="sl-yellow-rng" />
+            <label class="rule-label">Carry Bonus <span class="rule-val" id="val-yellow-rng">+30</span>%</label>
+            <input type="range" min="-50" max="50" value="30" class="slider slider-yellow" id="sl-yellow-rng" />
           </div>
           <div class="type-tags">
             <span class="tag tag-yellow">Elec Immune</span>
-            <span class="tag tag-yellow">High Carry</span>
+            <span class="tag tag-yellow">×2 Carry</span>
           </div>
         </div>
+
+        <!-- Rock Pikmin -->
+        <div class="panel-section">
+          <h2 class="panel-title" style="color:#aaaaaa">🪨 Rock Pikmin</h2>
+          <div class="rule-group">
+            <label class="rule-label">Count <span class="rule-val" id="val-rock-count">0</span></label>
+            <input type="range" min="0" max="30" value="0" class="slider slider-rock" id="sl-rock-count" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Attack Bonus <span class="rule-val" id="val-rock-atk">+25</span>%</label>
+            <input type="range" min="-50" max="50" value="25" class="slider slider-rock" id="sl-rock-atk" />
+          </div>
+          <div class="type-tags">
+            <span class="tag tag-rock">Crush Immune</span>
+            <span class="tag tag-rock">Highest DMG</span>
+          </div>
+        </div>
+
       </aside>
 
-      <!-- Center: Canvas -->
+      <!-- ═══ CENTER: Canvas ════════════════════════════════════════════════ -->
       <main id="canvas-wrap">
         <div id="canvas-toolbar">
           <div id="sim-controls">
@@ -131,20 +153,28 @@
           </div>
         </div>
 
+        <!-- Edit-mode hint (sandbox only, shown when paused) -->
+        <div id="edit-hint">
+          🖱️ <strong>Edit Mode:</strong> Drag the base, enemies, or treasures to reposition them before starting
+        </div>
+
         <canvas id="game-canvas"></canvas>
 
         <div id="canvas-legend">
-          <span class="legend-item"><span class="dot red"></span> Red Pikmin</span>
-          <span class="legend-item"><span class="dot blue"></span> Blue Pikmin</span>
-          <span class="legend-item"><span class="dot yellow"></span> Yellow Pikmin</span>
+          <span class="legend-item"><span class="dot red"></span> Red</span>
+          <span class="legend-item"><span class="dot blue"></span> Blue</span>
+          <span class="legend-item"><span class="dot yellow"></span> Yellow</span>
+          <span class="legend-item"><span class="dot rock"></span> Rock</span>
           <span class="legend-item"><span class="dot gold"></span> Treasure</span>
-          <span class="legend-item"><span class="dot enemy"></span> Enemy</span>
-          <span class="legend-item"><span class="dot base"></span> Base</span>
+          <span class="legend-item"><span class="dot enemy-dot"></span> Enemy</span>
+          <span class="legend-item"><span class="dot base-dot"></span> Base</span>
         </div>
       </main>
 
-      <!-- Right Panel: Stats + Scenarios -->
+      <!-- ═══ RIGHT PANEL: Stats + Enemies + Scenarios ══════════════════════ -->
       <aside id="panel-right">
+
+        <!-- Live Stats -->
         <div class="panel-section">
           <h2 class="panel-title">📊 Live Stats</h2>
           <div id="stats-grid">
@@ -175,6 +205,49 @@
           </div>
         </div>
 
+        <!-- Breadbug Enemy Panel -->
+        <div class="panel-section">
+          <h2 class="panel-title" style="color:#ff9944">🟠 Breadbug</h2>
+          <div class="rule-group">
+            <label class="rule-label">Count <span class="rule-val" id="val-breadbug-count">2</span></label>
+            <input type="range" min="0" max="10" value="2" class="slider slider-orange" id="sl-breadbug-count" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Speed <span class="rule-val" id="val-breadbug-speed">95</span></label>
+            <input type="range" min="20" max="180" value="95" class="slider slider-orange" id="sl-breadbug-speed" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">HP <span class="rule-val" id="val-breadbug-hp">25</span></label>
+            <input type="range" min="5" max="100" value="25" class="slider slider-orange" id="sl-breadbug-hp" />
+          </div>
+          <div class="type-tags">
+            <span class="tag tag-orange">Steals Treasure</span>
+            <span class="tag tag-orange">Small &amp; Fast</span>
+          </div>
+        </div>
+
+        <!-- Bulbmin Enemy Panel -->
+        <div class="panel-section">
+          <h2 class="panel-title" style="color:#6688ff">💙 Bulbmin</h2>
+          <div class="rule-group">
+            <label class="rule-label">Count <span class="rule-val" id="val-bulbmin-count">1</span></label>
+            <input type="range" min="0" max="6" value="1" class="slider slider-blue" id="sl-bulbmin-count" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">Speed <span class="rule-val" id="val-bulbmin-speed">42</span></label>
+            <input type="range" min="10" max="120" value="42" class="slider slider-blue" id="sl-bulbmin-speed" />
+          </div>
+          <div class="rule-group">
+            <label class="rule-label">HP <span class="rule-val" id="val-bulbmin-hp">90</span></label>
+            <input type="range" min="20" max="250" value="90" class="slider slider-blue" id="sl-bulbmin-hp" />
+          </div>
+          <div class="type-tags">
+            <span class="tag tag-blue">Eats Pikmin</span>
+            <span class="tag tag-blue">Large &amp; Tanky</span>
+          </div>
+        </div>
+
+        <!-- Scenarios -->
         <div class="panel-section">
           <h2 class="panel-title">📋 Scenarios</h2>
           <div class="scenario-list">
@@ -182,7 +255,7 @@
               <span class="sc-icon">🌿</span>
               <div>
                 <div class="sc-name">Free Sandbox</div>
-                <div class="sc-desc">Empty map, full control</div>
+                <div class="sc-desc">Drag to reposition anything</div>
               </div>
             </button>
             <button class="scenario-btn" data-scenario="enemy-heavy">
@@ -209,20 +282,23 @@
           </div>
         </div>
 
+        <!-- Event Log -->
         <div class="panel-section">
           <h2 class="panel-title">📖 Event Log</h2>
           <div id="event-log"></div>
         </div>
 
+        <!-- Results (shown after run ends) -->
         <div class="panel-section" id="results-panel" style="display:none">
           <h2 class="panel-title">🏆 Run Results</h2>
           <div id="results-content"></div>
         </div>
-      </aside>
-    </div>
-  </div>
 
-  <!-- Modals -->
+      </aside>
+    </div><!-- /main-layout -->
+  </div><!-- /app -->
+
+  <!-- ── Modal ─────────────────────────────────────────────────────────────── -->
   <div id="modal-overlay" class="hidden">
     <div id="modal-box">
       <button id="modal-close">✕</button>
@@ -230,7 +306,7 @@
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- ── Scripts (order matters) ───────────────────────────────────────────── -->
   <script src="js/systems/vector.js"></script>
   <script src="js/systems/pathfinding.js"></script>
   <script src="js/systems/eventbus.js"></script>

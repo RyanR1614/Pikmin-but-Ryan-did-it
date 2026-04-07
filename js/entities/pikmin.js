@@ -3,13 +3,13 @@
 
 // State machine states
 const PIKMIN_STATE = {
-  IDLE:      'idle',
-  WANDER:    'wander',
+  IDLE: 'idle',
+  WANDER: 'wander',
   FOLLOWING: 'following',
   ATTACKING: 'attacking',
-  CARRYING:  'carrying',
-  FLEEING:   'fleeing',
-  DEAD:      'dead',
+  CARRYING: 'carrying',
+  FLEEING: 'fleeing',
+  DEAD: 'dead',
 };
 
 // Pikmin type definitions
@@ -59,31 +59,46 @@ const PIKMIN_TYPES = {
     bonuses: { carry: 30 },
     description: 'Double carry strength. Electric immune.',
   },
+  rock: {
+    label: 'Rock',
+    color: '#888888',
+    stemColor: '#555555',
+    flowerColor: '#aaaaaa',
+    radius: 8,
+    baseSpeed: 60,
+    attackDamage: 15,        // highest damage, crushes armor
+    attackRange: 11,
+    attackCooldown: 1.0,
+    carryStrength: 1,
+    immunity: ['crush'],
+    bonuses: { attack: 25 },
+    description: 'Heaviest hitter. Immune to crushing.',
+  },
 };
 
 class Pikmin extends Entity {
   constructor(x, y, typeKey = 'red', rules = null) {
     super(x, y);
     const t = PIKMIN_TYPES[typeKey] || PIKMIN_TYPES.red;
-    this.typeKey       = typeKey;
-    this.typeLabel     = t.label;
-    this.color         = t.color;
-    this.stemColor     = t.stemColor;
-    this.flowerColor   = t.flowerColor;
-    this.radius        = t.radius;
-    this.baseSpeed     = t.baseSpeed;
-    this.attackDamage  = t.attackDamage;
-    this.attackRange   = t.attackRange;
+    this.typeKey = typeKey;
+    this.typeLabel = t.label;
+    this.color = t.color;
+    this.stemColor = t.stemColor;
+    this.flowerColor = t.flowerColor;
+    this.radius = t.radius;
+    this.baseSpeed = t.baseSpeed;
+    this.attackDamage = t.attackDamage;
+    this.attackRange = t.attackRange;
     this.attackCooldown = t.attackCooldown;
-    this.attackTimer   = 0;
+    this.attackTimer = 0;
     this.carryStrength = t.carryStrength;
-    this.immunity      = t.immunity;
-    this.typeBonuses   = t.bonuses;
+    this.immunity = t.immunity;
+    this.typeBonuses = t.bonuses;
 
-    this.hp      = 10;
-    this.maxHp   = 10;
-    this.state   = PIKMIN_STATE.WANDER;
-    this.target  = null;     // enemy or treasure
+    this.hp = 10;
+    this.maxHp = 10;
+    this.state = PIKMIN_STATE.WANDER;
+    this.target = null;     // enemy or treasure
     this.carrying = null;    // treasure being carried
     this.wanderAngle = Math.random() * Math.PI * 2;
     this.wanderTimer = 0;
@@ -146,9 +161,9 @@ class Pikmin extends Entity {
 
   update(dt, enemies, treasures, base, leader) {
     if (!this.alive) return;
-    this.animPhase  += dt * 4;
+    this.animPhase += dt * 4;
     this.attackTimer = Math.max(0, this.attackTimer - dt);
-    this.flashTimer  = Math.max(0, this.flashTimer - dt);
+    this.flashTimer = Math.max(0, this.flashTimer - dt);
     this._updateSpeedFromRules();
 
     // ── FSM driven by priority rules ────────────────────────────────────────
@@ -171,7 +186,7 @@ class Pikmin extends Entity {
     const nearEnemy = this._nearest(enemies, e => e.alive && this.pos.dist(e.pos) < detRange * 0.8);
     if (nearEnemy && this.isAlone) {
       const retreatPriIdx = prios.indexOf('retreat');
-      const attackPriIdx  = prios.indexOf('attack');
+      const attackPriIdx = prios.indexOf('attack');
       const fearFactor = fear / 100;
       if (retreatPriIdx < attackPriIdx || fearFactor > 0.7 || this.hp / this.maxHp < fearFactor) {
         this.state = PIKMIN_STATE.FLEEING;
@@ -187,8 +202,8 @@ class Pikmin extends Entity {
       if (acted) break;
       switch (prio) {
         case 'attack': acted = this._tryAttack(dt, enemies, detRange); break;
-        case 'carry':  acted = this._tryCarry(dt, treasures, detRange); break;
-        case 'follow': acted = this._tryFollow(dt, leader);             break;
+        case 'carry': acted = this._tryCarry(dt, treasures, detRange); break;
+        case 'follow': acted = this._tryFollow(dt, leader); break;
         case 'retreat': /* handled above */                             break;
       }
     }
@@ -243,7 +258,7 @@ class Pikmin extends Entity {
 
     if (this.pos.dist(treas.pos) > treas.radius + this.radius + 4) {
       const seek = Steering.arrive(this.pos, this.vel, treas.pos, this.speed, 150, 30);
-      const sep  = Steering.separation(this.pos, this.nearbyPikmin, 14, 40);
+      const sep = Steering.separation(this.pos, this.nearbyPikmin, 14, 40);
       this.applyForce(seek);
       this.applyForce(sep);
       this.vel = this.vel.limit(this.speed);
@@ -263,7 +278,7 @@ class Pikmin extends Entity {
     const target = leader.pos.add(offset);
     if (this.pos.dist(target) < 20) { this.vel.scaleMut(0.9); return true; }
     const seek = Steering.arrive(this.pos, this.vel, target, this.speed, 100, 40);
-    const sep  = Steering.separation(this.pos, this.nearbyPikmin, 14, 60);
+    const sep = Steering.separation(this.pos, this.nearbyPikmin, 14, 60);
     this.applyForce(seek);
     this.applyForce(sep);
     this.vel = this.vel.limit(this.speed);
@@ -298,7 +313,7 @@ class Pikmin extends Entity {
     }
     const desired = Vec2.fromAngle(this.wanderAngle, this.speed * 0.4);
     const steer = desired.sub(this.vel).limit(50);
-    const sep   = Steering.separation(this.pos, this.nearbyPikmin, 14, 40);
+    const sep = Steering.separation(this.pos, this.nearbyPikmin, 14, 40);
     this.applyForce(steer);
     this.applyForce(sep);
     this.vel = this.vel.limit(this.speed * 0.5);
@@ -363,8 +378,8 @@ class Pikmin extends Entity {
     // State-based aura
     const stateAura = {
       [PIKMIN_STATE.ATTACKING]: 'rgba(255,74,74,0.15)',
-      [PIKMIN_STATE.FLEEING]:   'rgba(150,150,255,0.15)',
-      [PIKMIN_STATE.CARRYING]:  'rgba(255,221,74,0.1)',
+      [PIKMIN_STATE.FLEEING]: 'rgba(150,150,255,0.15)',
+      [PIKMIN_STATE.CARRYING]: 'rgba(255,221,74,0.1)',
     };
     if (stateAura[this.state]) {
       ctx.beginPath();
